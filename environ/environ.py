@@ -29,9 +29,11 @@ def _cast(value):
     except ValueError:
         return value
 
+
 # return int if possible
 def _cast_int(v):
     return int(v) if hasattr(v, 'isdigit') and v.isdigit() else v
+
 
 def _cast_urlstr(v):
     return unquote_plus(v) if isinstance(v, str) else v
@@ -768,7 +770,7 @@ class Path(object):
 
     def __getitem__(self, *args, **kwargs):
         return self.__str__().__getitem__(*args, **kwargs)
-    
+
     def __fspath__(self):
         return self.__str__()
 
