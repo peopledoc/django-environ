@@ -285,13 +285,16 @@ class FileEnvTests(EnvTests):
         file_path = Path(__file__, is_file=True)('test_env.txt')
         self.env.read_env(file_path, PATH_VAR=Path(__file__, is_file=True).__root__)
 
+
 class SubClassTests(EnvTests):
 
     def setUp(self):
         super(SubClassTests, self).setUp()
         self.CONFIG = self.generateData()
+
         class MyEnv(Env):
             ENVIRON = self.CONFIG
+
         self.env = MyEnv()
 
     def test_singleton_environ(self):
@@ -395,7 +398,7 @@ class DatabaseTestSuite(unittest.TestCase):
 
         self.assertEqual(url['ENGINE'], 'django.db.backends.sqlite3')
         self.assertEqual(url['NAME'], ':memory:')
-        
+
     def test_memory_sqlite_url_warns_about_netloc(self):
         url = 'sqlite://missing-slash-path'
         with warnings.catch_warnings(record=True) as w:

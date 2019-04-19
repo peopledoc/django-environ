@@ -10,50 +10,41 @@ Python 3.
 import sys
 import pkgutil
 
-# -------
-# Pythons
-# -------
+PY2 = sys.version_info[0] == 2
+PY3 = sys.version_info[0] == 3
 
-# Syntax sugar.
-_ver = sys.version_info
-
-#: Python 2.x?
-is_py2 = (_ver[0] == 2)
-
-#: Python 3.x?
-is_py3 = (_ver[0] == 3)
-
-if is_py2:
+try:
+    import urllib.parse as urlparselib
+    quote = urlparselib.quote  # noqa
+    unquote_plus = urlparselib.unquote_plus  # noqa
+    basestring = str
+except ImportError:
     import urlparse as urlparselib
-    from urllib import quote, unquote_plus
-
+    from urllib import quote, unquote_plus  # noqa
     basestring = basestring
 
-elif is_py3:
-    import urllib.parse as urlparselib
-    quote = urlparselib.quote
-    unquote_plus = urlparselib.unquote_plus
-
-    basestring = str
 
 urlparse = urlparselib.urlparse
 urlunparse = urlparselib.urlunparse
 ParseResult = urlparselib.ParseResult
 parse_qs = urlparselib.parse_qs
 
-if pkgutil.find_loader('simplejson'):
-    import simplejson as json
-else:
-    import json
 
-if pkgutil.find_loader('django'):
+try:
+    import simplejson as json
+except ImportError:
+    import json  # noqa
+
+
+try:
     from django import VERSION as DJANGO_VERSION
-    from django.core.exceptions import ImproperlyConfigured
-else:
+    from django.core.exceptions import ImproperlyConfigured  # noqa
+except ImportError:
     DJANGO_VERSION = None
 
     class ImproperlyConfigured(Exception):
         pass
+
 
 # back compatibility with django postgresql package
 if DJANGO_VERSION is not None and DJANGO_VERSION < (2, 0):
